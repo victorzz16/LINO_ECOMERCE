@@ -1,0 +1,17 @@
+
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Instalar las dependencias necesarias del proyecto
+COPY package*.json ./
+RUN npm ci --omit=dev && npm cache clean --force
+
+# Copiar el código del servidor
+COPY backend ./backend
+
+ENV PORT=3001
+
+EXPOSE 3001
+
+CMD ["node", "backend/src/server.js"]
