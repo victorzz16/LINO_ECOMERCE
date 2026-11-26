@@ -1,17 +1,26 @@
 
+
 FROM node:20-alpine
 
 WORKDIR /app
 
-# Instalar las dependencias necesarias del proyecto
+# Instalar dependencias de producción
 COPY package*.json ./
 RUN npm ci --omit=dev && npm cache clean --force
 
-# Copiar el código del servidor
+# Copiar el backend
 COPY backend ./backend
 
-ENV PORT=3001
+# Copiar los scripts de inicialización
+COPY scripts ./scripts
 
-EXPOSE 3001
+# Copiar el catálogo de ejemplo
+COPY data/tienda.example.json ./data/tienda.example.json
 
-CMD ["node", "backend/src/server.js"]
+# Configuración del servidor
+ENV NODE_ENV=production
+ENV PORT=10000
+
+EXPOSE 10000
+
+CMD ["sh", "-c", "node scripts/init-postgres.js && node backend/src/server.js"]
