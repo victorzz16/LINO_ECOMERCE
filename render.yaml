@@ -25,3 +25,12 @@ services:
       - key: LINO_SESSION_SECRET
         generateValue: true
 
+      - key: LINO_ADMIN_EMAIL
+        sync: false
+
+      - key: LINO_ADMIN_PASSWORD
+        sync: false
+
+      - key: LINO_ADMIN_NAME
+        value: Administrador LINO
+

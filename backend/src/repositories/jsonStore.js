@@ -9,7 +9,7 @@ const archivo = () => process.env.LINO_DATA_FILE || path.join(raiz, 'data', 'tie
 let cola = Promise.resolve();
 
 export function validarTienda(data) {
-  if (!data || data.versionEsquema !== 1 || !Number.isSafeInteger(data.revision) || data.revision < 0 || !Array.isArray(data.productos) || !Array.isArray(data.pedidos)) {
+  if (!data || data.versionEsquema !== 1 || !Number.isSafeInteger(data.revision) || data.revision < 0 || !Array.isArray(data.productos) || !Array.isArray(data.pedidos) || (data.cupones !== undefined && !Array.isArray(data.cupones))) {
     throw new Error('Estructura de tienda.json inválida. Revisa los datos o restaura un respaldo.');
   }
   const idsProductos = new Set();
@@ -37,12 +37,16 @@ export async function leerTienda() {
     const pool = await obtenerPool();
     const { rows } = await pool.query('SELECT documento FROM lino_tienda_state WHERE id = 1');
     if (!rows.length) throw new Error('La tienda aún no está inicializada en PostgreSQL. Ejecuta npm run db:init.');
-    return validarTienda(rows[0].documento);
+    const documento = rows[0].documento;
+    if (!Array.isArray(documento.cupones)) documento.cupones = [];
+    return validarTienda(documento);
   }
 
   // Modo local y pruebas: almacenamiento JSON en el equipo.
   const texto = await readFile(archivo(), 'utf8');
-  return validarTienda(JSON.parse(texto));
+  const documento = JSON.parse(texto);
+  if (!Array.isArray(documento.cupones)) documento.cupones = [];
+  return validarTienda(documento);
 }
 
 export async function actualizarTienda(mutar) {
@@ -57,6 +61,7 @@ export async function actualizarTienda(mutar) {
 
       const previo = validarTienda(rows[0].documento);
       const nuevo = structuredClone(previo);
+      if (!Array.isArray(nuevo.cupones)) nuevo.cupones = [];
       const resultado = await mutar(nuevo);
       if (resultado?.sinCambios) {
         await cliente.query('COMMIT');
@@ -82,6 +87,7 @@ export async function actualizarTienda(mutar) {
   const operacion = cola.then(async () => {
     const previo = await leerTienda();
     const nuevo = structuredClone(previo);
+    if (!Array.isArray(nuevo.cupones)) nuevo.cupones = [];
     const resultado = await mutar(nuevo);
     if (resultado?.sinCambios) return resultado;
     nuevo.revision = previo.revision + 1;

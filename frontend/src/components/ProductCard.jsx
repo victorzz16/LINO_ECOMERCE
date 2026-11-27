@@ -1,52 +1,12 @@
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Heart, Truck } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { soles, nombreCategoria } from '../services/formato.js';
-
-/**
- * Tarjeta de producto individual para el catálogo.
- * Muestra imagen, categoría, nombre, precio y estado de disponibilidad.
- */
 export default function ProductCard({ producto }) {
+  const [favorito, setFavorito] = useState(() => { try { return JSON.parse(localStorage.getItem('lino:favoritos') || '[]').includes(producto.id); } catch { return false; } });
+  useEffect(() => { const sync=()=>{try{setFavorito(JSON.parse(localStorage.getItem('lino:favoritos')||'[]').includes(producto.id));}catch{setFavorito(false);}}; window.addEventListener('lino:favoritos-actualizados',sync); return ()=>window.removeEventListener('lino:favoritos-actualizados',sync); }, [producto.id]);
+  function alternarFavorito(e){e.preventDefault();e.stopPropagation();let ids=[];try{ids=JSON.parse(localStorage.getItem('lino:favoritos')||'[]')}catch{};const next=ids.includes(producto.id)?ids.filter(id=>id!==producto.id):[...ids,producto.id];localStorage.setItem('lino:favoritos',JSON.stringify(next));setFavorito(next.includes(producto.id));window.dispatchEvent(new Event('lino:favoritos-actualizados'));}
   const disponible = producto.variantes.some(v => v.stock > 0);
-
-  return (
-    <article className="product-card">
-      {/* Imagen con enlace al detalle */}
-      <Link
-        className="product-image-wrap"
-        to={`/producto/${producto.id}`}
-        aria-label={`Ver ${producto.nombre}`}
-      >
-        <img
-          src={producto.imagen}
-          alt={`Ilustración de ${producto.nombre}`}
-          loading="lazy"
-        />
-        {producto.etiqueta && (
-          <span className="product-tag">{producto.etiqueta}</span>
-        )}
-        <span className="image-arrow">
-          <ArrowUpRight size={20} />
-        </span>
-      </Link>
-
-      {/* Información del producto */}
-      <div className="product-meta">
-        <div>
-          <span className="product-category">
-            {nombreCategoria(producto.categoria)}
-          </span>
-          <Link to={`/producto/${producto.id}`}>
-            <h3>{producto.nombre}</h3>
-          </Link>
-        </div>
-        <p className="price">{soles(producto.precioCentimos)}</p>
-      </div>
-
-      {/* Indicador de agotado */}
-      {!disponible && (
-        <span className="sold-out">Temporalmente agotado</span>
-      )}
-    </article>
-  );
+  const stockTotal = producto.variantes.reduce((s,v)=>s+v.stock,0);
+  return <article className="product-card market-product-card"><Link className="product-image-wrap" to={`/producto/${producto.id}`} aria-label={`Ver ${producto.nombre}`}><img src={producto.imagen} alt={`Producto ${producto.nombre}`} loading="lazy"/>{producto.etiqueta&&<span className="product-tag">{producto.etiqueta}</span>}<button type="button" className={`product-favorite ${favorito ? 'is-favorite' : ''}`} onClick={alternarFavorito} aria-label={favorito ? 'Quitar de favoritos' : 'Guardar en favoritos'} aria-pressed={favorito}><Heart size={17} fill={favorito ? 'currentColor' : 'none'}/></button><span className="image-arrow"><ArrowUpRight size={20}/></span></Link><div className="product-meta"><div><span className="product-category">{nombreCategoria(producto.categoria)}</span><Link to={`/producto/${producto.id}`}><h3>{producto.nombre}</h3></Link></div><div className="product-price-wrap"><p className="price">{soles(producto.precioCentimos)}</p><small>Incluye IGV</small></div></div><div className="product-card-footer"><span className={disponible?'stock-available':'stock-empty'}>{disponible?`${stockTotal} disponibles`:'Agotado'}</span><span><Truck size={13}/> Envío disponible</span></div></article>;
 }

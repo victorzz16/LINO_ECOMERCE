@@ -2,13 +2,17 @@ import { useEffect, useState } from 'react';
 import { ArrowDownRight, ArrowRight, MoveUpRight, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard.jsx';
-import { obtenerProductos } from '../services/api.js';
+import { obtenerProductos, obtenerOfertas } from '../services/api.js';
 
 export default function Inicio() {
   const [productos, setProductos] = useState([]);
   const [error, setError] = useState('');
-  useEffect(() => { obtenerProductos().then(setProductos).catch(e => setError(e.message)); }, []);
+  const [ofertas, setOfertas] = useState([]);
+  const [ofertaActiva, setOfertaActiva] = useState(0);
+  useEffect(() => { obtenerProductos().then(setProductos).catch(e => setError(e.message)); obtenerOfertas().then(setOfertas).catch(()=>{}); }, []);
+  useEffect(() => { if (ofertas.length < 2) return undefined; const id=window.setInterval(()=>setOfertaActiva(i=>(i+1)%ofertas.length),5000); return ()=>window.clearInterval(id); }, [ofertas.length]);
   return <>
+    {ofertas.length > 0 && <section className="offers-carousel container" aria-label="Ofertas destacadas"><button type="button" className="offer-arrow offer-prev" aria-label="Oferta anterior" onClick={()=>setOfertaActiva(i=>(i-1+ofertas.length)%ofertas.length)}>‹</button><Link to={ofertas[ofertaActiva].enlace} className="offer-slide" style={{backgroundImage:`linear-gradient(90deg,rgba(15,18,22,.76),rgba(15,18,22,.08)),url("${ofertas[ofertaActiva].imagen}")`}}><div><span className="offer-kicker">OFERTA LINO</span><h2>{ofertas[ofertaActiva].titulo}</h2><p>{ofertas[ofertaActiva].subtitulo}</p><span className="offer-cta">Ver oferta <ArrowRight size={17}/></span></div></Link><button type="button" className="offer-arrow offer-next" aria-label="Siguiente oferta" onClick={()=>setOfertaActiva(i=>(i+1)%ofertas.length)}>›</button><div className="offer-dots">{ofertas.map((o,i)=><button key={o.id} aria-label={`Ver oferta ${i+1}`} className={i===ofertaActiva?'active':''} onClick={()=>setOfertaActiva(i)}/>)}</div></section>}
     <section className="hero">
       <div className="hero-copy">
         <div className="hero-eyebrow"><span className="eyebrow-line"/> NUEVA TEMPORADA · 2026</div>
@@ -17,7 +21,7 @@ export default function Inicio() {
         <Link className="btn btn-dark" to="/catalogo">Descubrir colección <ArrowRight size={19}/></Link>
         <div className="hero-bottom"><span>01 / 03 <span className="hero-line"/></span><span>ESTILO SIN COMPLICACIONES <ArrowDownRight size={17}/></span></div>
       </div>
-      <div className="hero-media"><img src="/imagenes/editorial-hero.svg" alt="Ilustración editorial de la colección LINO 2026"/><span className="vertical-stamp">CREADO PARA TU ESTILO</span><span className="hero-image-badge">E S T . &nbsp; 2 0 2 6</span></div>
+      <div className="hero-media"><img src="/imagenes/blazer-urbano.jpg" alt="Modelo con blazer clásico de la colección LINO"/><span className="vertical-stamp">CREADO PARA TU ESTILO</span><span className="hero-image-badge">E S T . &nbsp; 2 0 2 6</span></div>
     </section>
     <div className="value-strip"><div className="container value-inner"><span>Diseño cotidiano</span><i/><span>Esencia propia</span><i/><span>Prendas versátiles</span><i/><span>Estilo LINO</span></div></div>
 
@@ -26,7 +30,7 @@ export default function Inicio() {
       <div className="categories-grid">
         <Link className="category-tile category-woman" to="/catalogo?categoria=mujer"><span className="category-number">01 / STYLE</span><div><h3>Mujer</h3><span>Prendas para cada ocasión <MoveUpRight size={19}/></span></div><div className="category-figure figure-woman" aria-hidden="true"/></Link>
         <Link className="category-tile category-man" to="/catalogo?categoria=hombre"><span className="category-number">02 / STYLE</span><div><h3>Hombre</h3><span>El estilo está en los detalles <MoveUpRight size={19}/></span></div><div className="category-figure figure-man" aria-hidden="true"/></Link>
-        <Link className="category-tile category-accessories" to="/catalogo?categoria=accesorios"><span className="category-number">03 / STYLE</span><div><h3>Accesorios</h3><span>Complementa tu look <MoveUpRight size={19}/></span></div><div className="category-figure figure-accessories" aria-hidden="true"/></Link>
+        <Link className="category-tile category-accessories" to="/catalogo?categoria=accesorios"><span className="category-number">03 / STYLE</span><div><h3>Accesorios</h3><span>Complementa tu look <MoveUpRight size={19}/></span></div><div className="category-figure figure-accessories" aria-hidden="true"/></Link><Link className="category-tile category-accessories" to="/catalogo?categoria=zapatillas"><span className="category-number">04 / STYLE</span><div><h3>Zapatillas</h3><span>Camina a tu manera <MoveUpRight size={19}/></span></div><div className="category-figure figure-accessories" aria-hidden="true"/></Link>
       </div>
     </section>
 

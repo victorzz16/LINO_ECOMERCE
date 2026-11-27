@@ -58,7 +58,7 @@ function coincide(contrasena, guardado) {
 }
 
 // Si un usuario antiguo no tiene nombre, se usa la parte del correo antes de la @.
-const publico = usuario => ({ id: usuario.id, nombre: usuario.nombre || usuario.correo.split('@')[0], correo: usuario.correo });
+const publico = usuario => ({ id: usuario.id, nombre: usuario.nombre || usuario.correo.split('@')[0], correo: usuario.correo, rol: usuario.rol === 'admin' ? 'admin' : 'cliente' });
 
 export async function registrarUsuario({ nombre, correo, contrasena }) {
     const nombreLimpio = normalizarNombre(nombre);
@@ -67,7 +67,7 @@ export async function registrarUsuario({ nombre, correo, contrasena }) {
     validar(email, contrasena, true);
     return actualizarUsuarios(usuarios => {
         if (usuarios.some(u => u.correo === email)) throw new HttpError(409, 'Ya existe una cuenta con ese correo.');
-        const usuario = { id: randomUUID(), nombre: nombreLimpio, correo: email, contrasenaHash: crearHash(contrasena), creadoEn: new Date().toISOString() };
+        const usuario = { id: randomUUID(), nombre: nombreLimpio, correo: email, contrasenaHash: crearHash(contrasena), rol: 'cliente', creadoEn: new Date().toISOString() };
         usuarios.push(usuario);
         return publico(usuario);
     });
@@ -91,4 +91,24 @@ export async function ingresarUsuario({ correo, contrasena }) {
 export async function obtenerUsuarioPorId(id) {
     const usuario = (await leerUsuarios()).find(u => u.id === id);
     return usuario ? publico(usuario) : null;
+}
+// Crea la cuenta inicial de administración solo cuando se configuran variables de entorno.
+// Si el correo ya existe, conserva su contraseña y eleva únicamente su rol.
+export async function asegurarAdministradorConfigurado() {
+    const correo = normalizarCorreo(process.env.LINO_ADMIN_EMAIL);
+    const contrasena = process.env.LINO_ADMIN_PASSWORD;
+    const nombre = normalizarNombre(process.env.LINO_ADMIN_NAME || 'Administrador LINO');
+    if (!correo && !contrasena) return { configurado: false };
+    validar(correo, contrasena, true);
+    if (contrasena.length < 12) throw new Error('LINO_ADMIN_PASSWORD debe tener al menos 12 caracteres.');
+    return actualizarUsuarios(usuarios => {
+        let usuario = usuarios.find(u => normalizarCorreo(u.correo) === correo);
+        if (usuario) {
+            usuario.rol = 'admin';
+            return { configurado: true, creado: false, correo: usuario.correo };
+        }
+        usuario = { id: randomUUID(), nombre, correo, contrasenaHash: crearHash(contrasena), rol: 'admin', creadoEn: new Date().toISOString() };
+        usuarios.push(usuario);
+        return { configurado: true, creado: true, correo };
+    });
 }

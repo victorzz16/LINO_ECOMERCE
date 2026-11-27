@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import { obtenerProductos } from '../services/api.js';
 
 const CarritoContext = createContext(null);
 const STORAGE = 'lino_carrito_v1';
@@ -13,6 +14,8 @@ export function CarritoProvider({ children }) {
   const [items, setItems] = useState(desdeAlmacenamiento);
   const [mensaje, setMensaje] = useState('');
   useEffect(() => { localStorage.setItem(STORAGE, JSON.stringify(items)); }, [items]);
+  // Actualiza precios, fotos y stock guardados en el carrito con el catálogo del servidor.
+  useEffect(() => { let activo=true; obtenerProductos().then(productos=>{ if(!activo || !productos) return; const porVariante=new Map(productos.flatMap(p=>p.variantes.map(v=>[v.id,{producto:p,variante:v}]))); setItems(actuales=>actuales.filter(item=>porVariante.has(item.varianteId)).map(item=>{const {producto,variante}=porVariante.get(item.varianteId);return {...item,productoId:producto.id,nombre:producto.nombre,categoria:producto.categoria,imagen:producto.imagen,precioCentimos:producto.precioCentimos,stock:variante.stock,talla:variante.talla,color:variante.color,cantidad:Math.min(item.cantidad,variante.stock)};})); }).catch(()=>{}); return ()=>{activo=false;}; }, []);
   useEffect(() => {
     if (!mensaje) return;
     const temporizador = setTimeout(() => setMensaje(''), 3600);

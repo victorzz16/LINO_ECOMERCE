@@ -1,11 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowRight, CheckCircle2, Download, Minus, Plus, ShoppingBag, Trash2, X } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCarrito } from '../context/CarritoContext.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
-import { crearPedido } from '../services/api.js';
+import { crearPedido, validarCupon } from '../services/api.js';
 import { soles } from '../services/formato.js';
 import SelectorPago from '../components/SelectorPago.jsx';
+import DireccionEntrega, { leerDireccionGuardada } from '../components/DireccionEntrega.jsx';
 import { nombreMetodoPago } from '../services/metodosPago.js';
 import '../styles/checkout.css';
 
@@ -20,17 +21,27 @@ export default function Carrito() {
   const [errorBoleta, setErrorBoleta] = useState('');
   const [confirmacion, setConfirmacion] = useState(null);
   const [modalAbierto, setModalAbierto] = useState(false);
-  const [direccionEnvio, setDireccionEnvio] = useState('');
+  const [direccionEnvio, setDireccionEnvio] = useState(() => { const d=leerDireccionGuardada(); return d ? [d.direccion,d.referencia,d.distrito,d.provincia,d.departamento].filter(Boolean).join(', ') : ''; });
   const [metodoPago, setMetodoPago] = useState('');
+  const [codigoCupon, setCodigoCupon] = useState('');
+  const [cuponAplicado, setCuponAplicado] = useState(null);
+  const [validandoCupon, setValidandoCupon] = useState(false);
+  const [errorCupon, setErrorCupon] = useState('');
+  const navegar = useNavigate();
   const solicitudRef = useRef(null);
+  const cambiarDireccion = useCallback(valor => { setDireccionEnvio(valor); solicitudRef.current = null; }, []);
   const envioCentimos = cantidadTotal >= 2 ? 0 : ENVIO_BASE_CENTIMOS;
-  const igvCentimos = Math.round((totalCentimos + envioCentimos) * IGV_PORCENTAJE / 100);
-  const totalConEnvio = totalCentimos + envioCentimos + igvCentimos;
+  const descuentoCentimos = cuponAplicado?.descuentoCentimos || 0;
+  const baseConDescuento = Math.max(0, totalCentimos - descuentoCentimos);
+  const totalConEnvio = baseConDescuento + envioCentimos;
+  const igvCentimos = Math.round(totalConEnvio * IGV_PORCENTAJE / (100 + IGV_PORCENTAJE));
   const firmaCarrito = items.map(item => `${item.varianteId}:${item.cantidad}`).join('|');
 
   useEffect(() => {
     solicitudRef.current = null;
     setError('');
+    setCuponAplicado(null);
+    setErrorCupon('');
   }, [firmaCarrito]);
 
   useEffect(() => {
@@ -41,6 +52,16 @@ export default function Carrito() {
     window.addEventListener('keydown', cerrarConEscape);
     return () => window.removeEventListener('keydown', cerrarConEscape);
   }, [modalAbierto, procesando]);
+
+  async function aplicarCupon(evento) {
+    evento.preventDefault();
+    setErrorCupon('');
+    if (!codigoCupon.trim()) { setErrorCupon('Escribe un código de cupón.'); return; }
+    setValidandoCupon(true);
+    try { const cupon = await validarCupon(codigoCupon, totalCentimos); setCuponAplicado(cupon); setCodigoCupon(cupon.codigo); }
+    catch (e) { setCuponAplicado(null); setErrorCupon(e.message); }
+    finally { setValidandoCupon(false); }
+  }
 
   function abrirConfirmacion() {
     setError('');
@@ -62,9 +83,11 @@ export default function Carrito() {
         claveSolicitud: solicitudRef.current,
         direccionEnvio,
         metodoPago,
+        codigoCupon: cuponAplicado?.codigo || '',
       });
       solicitudRef.current = null;
       setConfirmacion(respuesta.pedido);
+      window.dispatchEvent(new Event('lino:actualizar-bienvenida'));
       setModalAbierto(false);
       vaciar();
       try {
@@ -116,7 +139,7 @@ export default function Carrito() {
           <div className="cart-item-info">
             <Link to={`/producto/${item.productoId}`}><h2>{item.nombre}</h2></Link>
             <p>{item.color} / Talla {item.talla}</p>
-            <p className="item-unit-price">{soles(item.precioCentimos)} c/u</p>
+            <p className="item-unit-price">{soles(item.precioCentimos)} c/u · IGV incluido</p>
             <div className="quantity-control">
               <button type="button" aria-label={`Reducir cantidad de ${item.nombre}`} disabled={item.cantidad <= 1} onClick={() => cambiarCantidad(item.varianteId, item.cantidad - 1)}><Minus size={15}/></button>
               <span>{item.cantidad}</span>
@@ -131,19 +154,21 @@ export default function Carrito() {
       </div>
       <aside className="order-summary">
         <p className="overline">TU PEDIDO DE PRUEBA</p><h2>Resumen</h2>
-        <div className="summary-row"><span>Subtotal</span><strong>{soles(totalCentimos)}</strong></div>
-        <div className="summary-row"><span>Envío</span><strong>{envioCentimos ? soles(envioCentimos) : 'Gratis'}</strong></div>
+        <div className="summary-row"><span>Subtotal (IGV incluido)</span><strong>{soles(totalCentimos)}</strong></div>
+        <div className="summary-row"><span>Envío (IGV incluido)</span><strong>{envioCentimos ? soles(envioCentimos) : 'Gratis'}</strong></div>
+        <form className="coupon-form" onSubmit={aplicarCupon}><label htmlFor="coupon-code">¿Tienes un cupón?</label><div><input id="coupon-code" value={codigoCupon} onChange={e=>{setCodigoCupon(e.target.value.toUpperCase());setCuponAplicado(null);setErrorCupon('');}} placeholder="Código de descuento"/><button type="submit" disabled={validandoCupon}>{validandoCupon?'...':'Aplicar'}</button></div>{errorCupon&&<small className="coupon-error">{errorCupon}</small>}{cuponAplicado&&<small className="coupon-success">{cuponAplicado.codigo} aplicado correctamente.</small>}</form>
+        {descuentoCentimos>0&&<div className="summary-row coupon-discount"><span>Descuento ({cuponAplicado.codigo})</span><strong>-{soles(descuentoCentimos)}</strong></div>}
         <p className="summary-shipping">{cantidadTotal >= 2 ? '¡Tu envío es gratis por llevar 2 o más unidades!' : 'El envío cuesta S/ 12.00. Agrega otra unidad para obtener envío gratis.'}</p>
-        <div className="summary-row"><span>IGV (18%)</span><strong>{soles(igvCentimos)}</strong></div>
+        <div className="summary-row"><span>IGV incluido (18%)</span><strong>{soles(igvCentimos)}</strong></div>
         <div className="summary-total"><span>Total</span><strong>{soles(totalConEnvio)}</strong></div>
         <p className="summary-disclaimer">Yape · Plin · Tarjeta · Efectivo disponibles en modo demostración. No se realizarán cobros reales.</p>
         {error && <div className="notice error" role="alert">{error}</div>}
         {cargandoSesion ? <button className="btn btn-dark summary-button" disabled>Verificando sesión...</button> : usuario ? (
           <button className="btn btn-dark summary-button" onClick={abrirConfirmacion}>Elegir cómo pagar <ArrowRight size={19}/></button>
         ) : (
-          <Link to="/login" className="btn btn-dark summary-button">Inicia sesión para continuar <ArrowRight size={19}/></Link>
+          <button type="button" className="btn btn-dark summary-button" onClick={()=>navegar('/login',{state:{from:'/carrito'}})}>Inicia sesión o regístrate para comprar <ArrowRight size={19}/></button>
         )}
-        {!usuario && !cargandoSesion && <p className="summary-login-hint">Inicia sesión para que la boleta incluya tus datos.</p>}
+        {!usuario && !cargandoSesion && <p className="summary-login-hint">Puedes navegar y agregar productos sin cuenta. Para confirmar la compra, inicia sesión o regístrate.</p>}
         <Link to="/catalogo" className="continue-link">Continuar comprando</Link>
       </aside>
     </div>}
@@ -155,8 +180,7 @@ export default function Carrito() {
         <h2 id="checkout-title">Elige cómo <em>pagar.</em></h2>
         <p className="checkout-customer">{usuario?.nombre}<br/><span>{usuario?.correo}</span></p>
         <form onSubmit={pagar}>
-          <label className="checkout-label" htmlFor="direccion-envio">Dirección de envío</label>
-          <textarea id="direccion-envio" value={direccionEnvio} onChange={evento => { setDireccionEnvio(evento.target.value); solicitudRef.current = null; }} placeholder="Calle, número, distrito, ciudad" rows="3" maxLength="300" required minLength="8" disabled={procesando}/>
+          <DireccionEntrega onChange={cambiarDireccion}/>
           <SelectorPago valor={metodoPago} onChange={valor => { setMetodoPago(valor); solicitudRef.current = null; setError(''); }} deshabilitado={procesando}/>
           <div className="checkout-next-step">PASO 2 DE 2 · REVISA TU PEDIDO</div>
           <div className="receipt-preview">
@@ -167,9 +191,10 @@ export default function Carrito() {
                 <strong>{soles(item.cantidad * item.precioCentimos)}</strong>
               </div>)}
             </div>
-            <div className="receipt-line"><span>Subtotal</span><strong>{soles(totalCentimos)}</strong></div>
-            <div className="receipt-line"><span>Envío</span><strong>{envioCentimos ? soles(envioCentimos) : 'Gratis'}</strong></div>
-            <div className="receipt-line"><span>IGV (18%)</span><strong>{soles(igvCentimos)}</strong></div>
+            <div className="receipt-line"><span>Subtotal (IGV incluido)</span><strong>{soles(totalCentimos)}</strong></div>
+            <div className="receipt-line"><span>Envío (IGV incluido)</span><strong>{envioCentimos ? soles(envioCentimos) : 'Gratis'}</strong></div>
+            {descuentoCentimos>0&&<div className="receipt-line"><span>Descuento ({cuponAplicado.codigo})</span><strong>-{soles(descuentoCentimos)}</strong></div>}
+            <div className="receipt-line"><span>IGV incluido (18%)</span><strong>{soles(igvCentimos)}</strong></div>
             <div className="receipt-line receipt-total"><span>Total</span><strong>{soles(totalConEnvio)}</strong></div>
             <div className="receipt-line"><span>Método de pago</span><strong>{nombreMetodoPago(metodoPago)}</strong></div>
           </div>

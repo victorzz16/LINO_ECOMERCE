@@ -27,7 +27,7 @@ Si quieres conservar el catálogo, stock, pedidos y usuarios que ya tienes en tu
 1. Extrae este ZIP en una carpeta de trabajo.
 2. Copia desde tu proyecto local anterior `data/tienda.json` a la carpeta `data/` del proyecto nuevo, si existe.
 3. Copia `data/bd.json` a la misma carpeta `data/`, si existe. Este archivo contiene hashes de contraseña y debe mantenerse privado.
-4. Si no tienes esos archivos, el sistema utilizará el catálogo de ejemplo de 24 productos y empezará con usuarios vacíos.
+4. Si no tienes esos archivos, el sistema utilizará el catálogo de ejemplo de 28 productos y empezará con usuarios vacíos.
 
 ## 3. Inicializar Neon desde tu computadora
 
@@ -86,13 +86,12 @@ Crea un Pull Request hacia `main`. Espera a que LINO CI finalice correctamente y
 3. Render leerá `render.yaml`. El servicio propuesto se llama `lino-ecomerce-api`.
 4. Si Render pide `DATABASE_URL`, pega la cadena privada de Neon.
 5. Comprueba que `LINO_SESSION_SECRET` se genere automáticamente por `generateValue: true`. Si creas el servicio manualmente, crea una variable secreta con una cadena aleatoria de al menos 32 bytes.
-6. El servicio debe utilizar:
-   - Build Command: `npm ci`
-   - Start Command: `npm run db:init && npm run start:api`
-   - Health Check Path: `/api/health`
-   - Plan: Free
-7. Espera a que el primer despliegue finalice.
-8. Abre `https://TU-SERVICIO.onrender.com/api/health`. Debe responder JSON con `ok: true` y `almacenamiento: "postgresql"`.
+6. El Blueprint configura el servicio como Docker mediante `Dockerfile.backend`; no reemplaces el comando de inicio del contenedor. El contenedor ejecuta `scripts/init-postgres.js`, prepara la cuenta administradora configurada y después inicia Express.
+7. Configura también las variables privadas `LINO_ADMIN_EMAIL` y `LINO_ADMIN_PASSWORD` (contraseña única de 12 caracteres o más). `LINO_ADMIN_NAME` es opcional. Si el correo ya existe en la base, se le asigna el rol admin sin cambiar su contraseña; si no existe, se crea la cuenta.
+8. Comprueba que `LINO_SESSION_SECRET` se genere automáticamente por `generateValue: true` y que `PORT` sea `10000`.
+9. El servicio debe conservar `Health Check Path: /api/health` y `Plan: Free`.
+10. Espera a que el primer despliegue finalice.
+11. Abre `https://TU-SERVICIO.onrender.com/api/health`. Debe responder JSON con `ok: true` y `almacenamiento: "postgresql"`.
 
 Si la URL asignada no es `https://lino-ecomerce-api.onrender.com`, copia la URL real del servicio para el siguiente paso.
 

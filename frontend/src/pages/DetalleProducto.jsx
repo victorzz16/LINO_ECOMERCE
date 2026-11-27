@@ -1,147 +1,15 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowLeft, ArrowRight, Check, PackageCheck } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, PackageCheck, ShieldCheck, Truck } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { useCarrito } from '../context/CarritoContext.jsx';
 import { obtenerProducto } from '../services/api.js';
 import { nombreCategoria, soles } from '../services/formato.js';
-
-export default function DetalleProducto() {
-  const { id } = useParams();
-  const [producto, setProducto] = useState(null);
-  const [error, setError] = useState('');
-  const [talla, setTalla] = useState('');
-  const [color, setColor] = useState('');
-  
-  // Estados para el control de cantidad y el mensaje de éxito (Requerido por Jira)
-  const [cantidad, setCantidad] = useState(1);
-  const [mensajeExito, setMensajeExito] = useState('');
-
-  const { agregar } = useCarrito();
-
-  useEffect(() => {
-    let activo = true;
-    setProducto(null); setError(''); setTalla(''); setColor(''); setCantidad(1); setMensajeExito('');
-    obtenerProducto(id).then(p => { 
-      if (!activo) return; 
-      setProducto(p); 
-      const primera = p.variantes.find(v => v.stock > 0) || p.variantes[0]; 
-      setTalla(primera?.talla || ''); 
-      setColor(primera?.color || ''); 
-    }).catch(e => { if (activo) setError(e.message); });
-    return () => { activo = false; };
-  }, [id]);
-
-  const tallas = useMemo(() => [...new Set(producto?.variantes.map(v => v.talla) || [])], [producto]);
-  const colores = useMemo(() => [...new Set(producto?.variantes.map(v => v.color) || [])], [producto]);
-  const variante = producto?.variantes.find(v => v.talla === talla && v.color === color);
-
-  // Lógica para los botones de sumar y restar cantidad
-  const cambiarCantidad = (operacion) => {
-    if (operacion === 'sumar' && cantidad < (variante?.stock || 10)) setCantidad(cantidad + 1);
-    if (operacion === 'restar' && cantidad > 1) setCantidad(cantidad - 1);
-  };
-
-  // Lógica del botón de agregar
-  const manejarAgregar = () => {
-    // Validación exigida por el Jira
-    if (!talla || !color) {
-      alert('Por favor, selecciona una talla y un color antes de agregar.');
-      return;
-    }
-    
-    if (!variante || variante.stock <= 0) return;
-
-    // Llamamos a la función de Samuel (solo acepta producto y variante)
-    if (!agregar(producto, variante, cantidad)) return;
-    
-    // Mostramos el mensaje de confirmación en pantalla
-    setMensajeExito(`¡Se agregó ${producto.nombre} al carrito!`);
-    
-    // El mensaje desaparece a los 3 segundos
-    setTimeout(() => setMensajeExito(''), 3000);
-  };
-
-  if (error) return <div className="container detail-status"><h2>No pudimos cargar la prenda</h2><p>{error}</p><Link to="/catalogo" className="btn btn-dark">Volver a la colección</Link></div>;
-  if (!producto) return <div className="container detail-status">Cargando prenda...</div>;
-  
-  return <div className="container product-detail">
-    <nav className="breadcrumbs" aria-label="Ruta de navegación"><Link to="/">Inicio</Link><span>/</span><Link to="/catalogo">Colección</Link><span>/</span>{producto.nombre}</nav>
-    
-    <div className="detail-layout">
-      <div className="detail-image">
-        <img src={producto.imagen} alt={`Ilustración de ${producto.nombre}`}/>
-        {producto.etiqueta && <span className="product-tag">{producto.etiqueta}</span>}
-      </div>
-      
-      <div className="detail-info">
-        <p className="overline">LINO / {nombreCategoria(producto.categoria).toUpperCase()}</p>
-        <h1>{producto.nombre}</h1>
-        <p className="detail-price">{soles(producto.precioCentimos)}</p>
-        <p className="detail-description">{producto.descripcion}</p>
-        <div className="detail-divider"/>
-        
-        {/* SELECTOR DE COLOR */}
-        <div className="variant-block">
-          <h3>Color: <span>{color || 'Selecciona uno'}</span></h3>
-          <div className="size-options">
-            {colores.map(valor => (
-              <button key={valor} type="button" onClick={() => { setColor(valor); const existe = producto.variantes.some(v => v.color === valor && v.talla === talla); if (!existe) setTalla(producto.variantes.find(v => v.color === valor)?.talla || ''); }} className={color === valor ? 'chosen' : ''}>
-                {valor}
-              </button>
-            ))}
-          </div>
-        </div>
-        
-        {/* SELECTOR DE TALLA */}
-        <div className="variant-block">
-          <h3>Talla: <span>{talla || 'Selecciona una'}</span></h3>
-          <div className="size-options">
-            {tallas.map(valor => { 
-              const v = producto.variantes.find(item => item.talla === valor && item.color === color); 
-              return (
-                <button key={valor} type="button" className={`${talla === valor ? 'chosen' : ''} ${!v || !v.stock ? 'unavailable' : ''}`} onClick={() => setTalla(valor)} disabled={!v || !v.stock} title={!v || !v.stock ? 'Agotado' : ''}>
-                  {valor}
-                </button>
-              ); 
-            })}
-          </div>
-        </div>
-        
-        {/* CONTROL DE CANTIDAD (NUEVO) */}
-        <div className="variant-block" style={{ marginTop: '20px' }}>
-          <h3>Cantidad:</h3>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginTop: '10px' }}>
-            <button onClick={() => cambiarCantidad('restar')} disabled={cantidad <= 1} style={{ padding: '5px 15px', cursor: cantidad <= 1 ? 'not-allowed' : 'pointer', fontSize: '18px' }}>-</button>
-            <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{cantidad}</span>
-            <button onClick={() => cambiarCantidad('sumar')} disabled={cantidad >= (variante?.stock || 10)} style={{ padding: '5px 15px', cursor: cantidad >= (variante?.stock || 10) ? 'not-allowed' : 'pointer', fontSize: '18px' }}>+</button>
-          </div>
-        </div>
-
-        <p className={`availability ${variante?.stock ? 'has-stock' : ''}`}>
-          {variante?.stock ? <><Check size={16}/> Disponible · {variante.stock} unidades</> : 'Esta combinación se encuentra agotada'}
-        </p>
-        
-        {/* BOTÓN AGREGAR AL CARRITO */}
-        <button type="button" className="btn btn-dark detail-add" disabled={!variante || variante.stock <= 0} onClick={manejarAgregar}>
-          Agregar al carrito <ArrowRight size={19}/>
-        </button>
-        
-        {/* MENSAJE DE CONFIRMACIÓN VISIBLE (Requerido por Jira) */}
-        {mensajeExito && (
-          <div style={{ marginTop: '15px', padding: '12px', backgroundColor: '#d4edda', color: '#155724', borderRadius: '5px', fontWeight: 'bold', textAlign: 'center' }}>
-            {mensajeExito}
-          </div>
-        )}
-
-        <div className="detail-help">
-          <PackageCheck size={19}/>
-          <span>Pedido de demostración. No se realizan cobros reales.</span>
-        </div>
-        
-        <Link to="/catalogo" className="back-link">
-          <ArrowLeft size={17}/> Seguir explorando
-        </Link>
-      </div>
-    </div>
-  </div>;
+export default function DetalleProducto(){
+ const {id}=useParams();const [producto,setProducto]=useState(null);const [error,setError]=useState('');const [talla,setTalla]=useState('');const [color,setColor]=useState('');const [cantidad,setCantidad]=useState(1);const [mensajeExito,setMensajeExito]=useState('');const [imagenActiva,setImagenActiva]=useState('');const {agregar}=useCarrito();
+ useEffect(()=>{let activo=true;setProducto(null);setError('');setTalla('');setColor('');setCantidad(1);setMensajeExito('');obtenerProducto(id).then(p=>{if(!activo)return;setProducto(p);const primera=p.variantes.find(v=>v.stock>0)||p.variantes[0];setTalla(primera?.talla||'');setColor(primera?.color||'');setImagenActiva(p.imagen);}).catch(e=>{if(activo)setError(e.message);});return()=>{activo=false;};},[id]);
+ const tallas=useMemo(()=>[...new Set(producto?.variantes.map(v=>v.talla)||[])],[producto]);const colores=useMemo(()=>[...new Set(producto?.variantes.map(v=>v.color)||[])],[producto]);const variante=producto?.variantes.find(v=>v.talla===talla&&v.color===color);const imagenes=useMemo(()=>producto?[producto.imagen,...(producto.imagenes||[])].filter(Boolean):[],[producto]);
+ function manejarAgregar(){if(!variante||variante.stock<1)return;if(agregar(producto,variante,cantidad)){setMensajeExito('Producto agregado al carrito.');setTimeout(()=>setMensajeExito(''),3000);}}
+ if(error)return <div className="container detail-status"><h2>No pudimos cargar el producto</h2><p>{error}</p><Link to="/catalogo" className="btn btn-dark">Volver a la colección</Link></div>;
+ if(!producto)return <div className="container detail-status">Cargando producto...</div>;
+ return <div className="container product-detail market-detail"><nav className="breadcrumbs"><Link to="/">Inicio</Link><span>/</span><Link to="/catalogo">Colección</Link><span>/</span>{producto.nombre}</nav><div className="detail-layout market-detail-layout"><div className="detail-gallery"><div className="detail-thumbnails">{imagenes.map((src,i)=><button key={`${src}-${i}`} className={imagenActiva===src?'active':''} onClick={()=>setImagenActiva(src)}><img src={src} alt={`${producto.nombre} vista ${i+1}`}/></button>)}</div><div className="detail-image market-detail-image"><img src={imagenActiva||producto.imagen} alt={producto.nombre}/>{producto.etiqueta&&<span className="product-tag">{producto.etiqueta}</span>}</div></div><section className="detail-info market-detail-info"><p className="overline">LINO / {nombreCategoria(producto.categoria).toUpperCase()}</p><h1>{producto.nombre}</h1><div className="detail-rating"><span>Producto disponible en la colección LINO</span></div><p className="detail-price">{soles(producto.precioCentimos)} <small>IGV incluido</small></p><p className="detail-description">{producto.descripcion}</p><div className="detail-divider"/><div className="variant-block"><h3>Color: <span>{color||'Selecciona uno'}</span></h3><div className="size-options">{colores.map(v=><button key={v} onClick={()=>{setColor(v);const exists=producto.variantes.some(x=>x.color===v&&x.talla===talla&&x.stock>0);if(!exists)setTalla(producto.variantes.find(x=>x.color===v&&x.stock>0)?.talla||'');}} className={color===v?'chosen':''}>{v}</button>)}</div></div><div className="variant-block"><h3>Talla: <span>{talla||'Selecciona una'}</span></h3><div className="size-options">{tallas.map(v=>{const x=producto.variantes.find(y=>y.talla===v&&y.color===color);return <button key={v} className={`${talla===v?'chosen':''} ${!x||!x.stock?'unavailable':''}`} onClick={()=>setTalla(v)} disabled={!x||!x.stock}>{v}</button>;})}</div></div><div className="detail-buy-row"><div className="quantity-control"><button onClick={()=>setCantidad(c=>Math.max(1,c-1))} disabled={cantidad<=1}>−</button><span>{cantidad}</span><button onClick={()=>setCantidad(c=>Math.min(variante?.stock||1,c+1))} disabled={cantidad>=(variante?.stock||1)}>+</button></div><button type="button" className="btn btn-dark detail-add" disabled={!variante||variante.stock<=0} onClick={manejarAgregar}>Agregar al carrito <ArrowRight size={19}/></button></div><p className={`availability ${variante?.stock?'has-stock':''}`}>{variante?.stock?<><Check size={16}/> Disponible · {variante.stock} unidades</>:'Esta combinación se encuentra agotada'}</p>{mensajeExito&&<div className="notice detail-success">{mensajeExito}</div>}<div className="detail-promises"><div><Truck size={20}/><span><b>Entrega disponible</b><small>Registra tu dirección al comprar</small></span></div><div><PackageCheck size={20}/><span><b>Seguimiento de pedido</b><small>Consulta el estado desde Mi cuenta</small></span></div><div><ShieldCheck size={20}/><span><b>Compra protegida</b><small>Confirmación de pedido en tu cuenta</small></span></div></div><p className="detail-demo-note">Proyecto demostrativo: los métodos de pago no procesan cobros reales.</p></section></div><section className="product-extra-info"><h2>Información del producto</h2><p>{producto.descripcion}</p><div><span>Categoría</span><strong>{nombreCategoria(producto.categoria)}</strong><span>Variantes disponibles</span><strong>{producto.variantes.length}</strong></div></section><Link to="/catalogo" className="back-link"><ArrowLeft size={17}/> Seguir explorando</Link></div>;
 }

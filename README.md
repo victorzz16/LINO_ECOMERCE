@@ -4,7 +4,7 @@ Proyecto académico **React + Vite (frontend)** y **Node.js + Express (backend)*
 
 ## Funcionalidades
 
-- Catálogo de 24 productos con imágenes SVG locales, variantes, precios en soles y stock.
+- Catálogo de 28 productos con fotografías JPG locales (incluye zapatillas), variantes, precios finales en soles con IGV incluido y stock.
 - Carrito de compras, selección de talla/color y generación de pedidos.
 - Métodos demostrativos: Yape, Plin, tarjeta y efectivo. No se procesa dinero ni se capturan datos reales de tarjetas.
 - Registro e inicio de sesión con contraseña almacenada mediante hash scrypt y cookie HttpOnly firmada.
@@ -62,7 +62,7 @@ Para volver al modo local, elimina `DATABASE_URL` del entorno; no borres la base
 
 ## Despliegue gratuito Vercel + Render + Neon
 
-Consulta la guía completa en [`docs/DESPLIEGUE_GRATUITO.md`](docs/DESPLIEGUE_GRATUITO.md).
+Consulta la guía completa en [`docs/DESPLIEGUE_GRATUITO.md`](docs/DESPLIEGUE_GRATUITO.md). Para aplicar esta entrega sobre tu clon de `main` en Windows, sigue [`docs/ACTUALIZAR_MAIN_WINDOWS.md`](docs/ACTUALIZAR_MAIN_WINDOWS.md).
 
 - `render.yaml`: crea el backend Express gratuito en Render, inicializa PostgreSQL y comprueba `/api/health`.
 - `vercel.json`: compila `frontend/dist`, enruta `/api/*` al backend de Render y conserva las rutas de React Router.
@@ -121,3 +121,45 @@ vercel.json                Build y proxy same-origin para Vercel
 - Las opciones Yape, Plin, tarjeta y efectivo son demostrativas; `estadoPago` queda como `no_procesado`.
 - El PDF es un comprobante demostrativo, no un comprobante tributario.
 - La autenticación usa cookie HttpOnly y clave `LINO_SESSION_SECRET`, que debe mantenerse estable entre despliegues.
+
+
+## Acceso público, administración, pedidos y cupones
+
+La tienda permite navegar por el inicio, catálogo y detalle de productos sin iniciar sesión. Para confirmar un pedido, el cliente debe registrarse o iniciar sesión. El backend conserva la validación de sesión antes de registrar compras.
+
+### Configurar la cuenta administradora
+
+La cuenta administradora inicial se configura mediante variables de entorno, nunca mediante credenciales fijas en el código:
+
+- `LINO_ADMIN_EMAIL`: correo que tendrá el rol `admin`.
+- `LINO_ADMIN_PASSWORD`: contraseña única de al menos 12 caracteres.
+- `LINO_ADMIN_NAME`: nombre visible del administrador (opcional).
+
+En Render, agrega estas variables en el servicio `lino-ecomerce-api`. En el entorno local, colócalas en `.env` (archivo ignorado por Git). Al iniciar el contenedor, `scripts/ensure-admin.js` crea la cuenta si no existe o asigna el rol administrador al correo configurado, conservando la contraseña de una cuenta existente. No se imprimen contraseñas en los logs.
+
+Después de iniciar sesión con esa cuenta, el enlace `Administración` abre `/admin`. Las operaciones administrativas se protegen también en el backend y no dependen solo de ocultar botones en React.
+
+### Funciones administrativas
+
+El panel permite consultar indicadores, crear/editar/desactivar productos, revisar pedidos y actualizar su estado, consultar usuarios sin exponer hashes de contraseña y crear/editar/desactivar cupones. Los cupones pueden ser porcentuales o de importe fijo, con compra mínima, fechas de vigencia y límite de usos. El servidor vuelve a validar el cupón y calcula el descuento al registrar el pedido.
+
+### Historial y ayuda
+
+Los clientes autenticados pueden consultar `Mis pedidos`. El Centro de ayuda contiene categorías informativas y el asistente flotante utiliza respuestas guiadas predefinidas; no es un agente de IA conectado a servicios externos.
+
+### Migración segura de la estructura de tienda
+
+El campo `cupones` se agrega de forma compatible al documento JSON de tienda cuando se lee por primera vez. Los productos, pedidos y cuentas existentes se conservan. `npm run db:init` sigue usando `ON CONFLICT DO NOTHING`, por lo que no reemplaza la información ya almacenada en Neon.
+
+## Fotografías y stock del catálogo de demostración
+
+El catálogo incluye 28 imágenes JPG estáticas de apariencia fotográfica, una por producto, incluidas cuatro zapatillas. Las imágenes se generan para la demostración académica y deben reemplazarse por fotografías propias si la tienda se utiliza comercialmente. Cada variante de ejemplo comienza con 35, 40, 45 o 50 unidades. La actualización de datos existentes se ejecuta una sola vez al inicializar la base de datos y conserva pedidos y stocks que ya sean superiores. Consulta `docs/IMAGENES_Y_STOCK_DEMO.md`.
+
+
+## Promociones, direcciones y precios
+
+- La tienda incluye 10 cupones de prueba; `BIENVENIDA10` se limita a la primera compra por cuenta.
+- El inicio muestra un carrusel de ofertas administrable desde el panel (pestaña Ofertas) y mensajes superiores rotativos cada 3 segundos.
+- La dirección de entrega se puede escribir o completar con la ubicación actual del navegador (requiere permiso y HTTPS o localhost).
+- Los precios de catálogo son finales e incluyen IGV del 18%; el carrito y la boleta informan la porción de IGV sin volver a sumarla.
+- El Centro de ayuda presenta temas y preguntas frecuentes además del chatbot.

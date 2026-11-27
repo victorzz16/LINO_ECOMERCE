@@ -9,6 +9,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { asegurarEsquema, obtenerPool, cerrarPoolPostgres } from '../backend/src/db/postgres.js';
 import { validarTienda } from '../backend/src/repositories/jsonStore.js';
+import { actualizarCatalogoDemo } from './lib/actualizarCatalogoDemo.js';
 
 try { process.loadEnvFile?.(); } catch (error) { if (error.code !== 'ENOENT') throw error; }
 
@@ -32,6 +33,7 @@ async function main() {
     throw new Error('Configura DATABASE_URL en el archivo .env o en las variables del servicio antes de ejecutar npm run db:init.');
   }
 
+  const plantillaCatalogo = validarTienda(await leerJson(archivoEjemplo, null));
   const tienda = validarTienda(await leerJson(archivoTienda, archivoEjemplo));
   const bdUsuarios = await leerJson(archivoUsuarios, null) ?? { usuarios: [] };
   if (!bdUsuarios || !Array.isArray(bdUsuarios.usuarios)) {
@@ -57,11 +59,26 @@ async function main() {
        RETURNING id`,
       [JSON.stringify(bdUsuarios.usuarios)],
     );
+
+    // Actualización de catálogo y stock de demostración una sola vez.
+    const estadoActual = await cliente.query(
+      'SELECT documento FROM lino_tienda_state WHERE id = 1 FOR UPDATE',
+    );
+    const migracion = actualizarCatalogoDemo(estadoActual.rows[0].documento, plantillaCatalogo);
+    if (migracion.aplicado) {
+      const documentoActualizado = validarTienda(migracion.documento);
+      await cliente.query(
+        'UPDATE lino_tienda_state SET documento = $1::jsonb, actualizado_en = NOW() WHERE id = 1',
+        [JSON.stringify(documentoActualizado)],
+      );
+    }
     await cliente.query('COMMIT');
 
     console.log('✓ Esquema PostgreSQL de LINO verificado.');
-    console.log(tiendaInsertada.rowCount ? `✓ Catálogo inicial importado (${tienda.productos.length} productos, ${tienda.pedidos.length} pedidos).` : '✓ Catálogo existente conservado; no se sobrescribieron productos ni pedidos.');
+    console.log(tiendaInsertada.rowCount ? `✓ Catálogo inicial importado (${tienda.productos.length} productos, ${tienda.pedidos.length} pedidos).` : '✓ Catálogo existente conservado; no se sobrescribieron pedidos ni cuentas.');
     console.log(usuariosInsertados.rowCount ? `✓ Usuarios iniciales importados (${bdUsuarios.usuarios.length}).` : '✓ Usuarios existentes conservados; no se sobrescribieron cuentas.');
+    if (migracion.aplicado) console.log(`✓ Catálogo fotográfico aplicado: ${migracion.imagenesActualizadas} imágenes y ${migracion.variantesActualizadas} stocks ampliados.`);
+    else console.log('✓ Catálogo fotográfico y stock ya estaban actualizados.');
   } catch (error) {
     await cliente.query('ROLLBACK').catch(() => {});
     throw error;

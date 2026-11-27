@@ -3,7 +3,7 @@ const API = import.meta.env.VITE_API_URL || '/api';
 async function solicitar(ruta, opciones) {
   let respuesta;
   try {
-    respuesta = await fetch(`${API}${ruta}`, { headers: { 'Content-Type': 'application/json' }, ...opciones });
+    respuesta = await fetch(`${API}${ruta}`, { credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, ...opciones });
   } catch {
     throw new Error('No se pudo conectar con LINO. Verifica que el servidor esté iniciado con npm run dev.');
   }
@@ -25,3 +25,10 @@ export async function obtenerProducto(id) {
 export async function crearPedido(datos) {
   return solicitar('/pedidos', { method: 'POST', body: JSON.stringify(datos) });
 }
+
+export async function validarCupon(codigo, subtotalCentimos) {
+  return (await solicitar('/cupones/validar', { method: 'POST', body: JSON.stringify({ codigo, subtotalCentimos }) })).cupon;
+}
+
+export async function obtenerOfertas() { return (await solicitar('/ofertas')).ofertas; }
+export async function obtenerEstadoBienvenida() { return solicitar('/cupones/bienvenida'); }

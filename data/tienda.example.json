@@ -3,7 +3,9 @@
   "revision": 0,
   "configuracion": {
     "moneda": "PEN",
-    "nombre": "LINO"
+    "nombre": "LINO",
+    "preciosIncluyenIgv": true,
+    "igvPorcentaje": 18
   },
   "productos": [
     {
@@ -11,8 +13,8 @@
       "nombre": "Polo esencial de algodón",
       "categoria": "mujer",
       "descripcion": "Una prenda versátil de corte relajado y textura suave. Ideal para combinar todos los días.",
-      "precioCentimos": 5990,
-      "imagen": "/imagenes/polo-algodon.svg",
+      "precioCentimos": 7068,
+      "imagen": "/imagenes/polo-algodon.jpg",
       "etiqueta": "Más vendido",
       "activo": true,
       "variantes": [
@@ -20,25 +22,25 @@
           "id": "var-001",
           "talla": "S",
           "color": "Marfil",
-          "stock": 9
+          "stock": 35
         },
         {
           "id": "var-002",
           "talla": "M",
           "color": "Marfil",
-          "stock": 12
+          "stock": 40
         },
         {
           "id": "var-003",
           "talla": "L",
           "color": "Marfil",
-          "stock": 5
+          "stock": 45
         },
         {
           "id": "var-004",
           "talla": "M",
           "color": "Negro",
-          "stock": 6
+          "stock": 50
         }
       ]
     },
@@ -47,8 +49,8 @@
       "nombre": "Camisa de lino natural",
       "categoria": "hombre",
       "descripcion": "Camisa ligera de manga larga con botones y acabados sencillos para un estilo contemporáneo.",
-      "precioCentimos": 11990,
-      "imagen": "/imagenes/camisa-lino.svg",
+      "precioCentimos": 14148,
+      "imagen": "/imagenes/camisa-lino.jpg",
       "etiqueta": "Nueva colección",
       "activo": true,
       "variantes": [
@@ -56,25 +58,25 @@
           "id": "var-005",
           "talla": "S",
           "color": "Arena",
-          "stock": 6
+          "stock": 35
         },
         {
           "id": "var-006",
           "talla": "M",
           "color": "Arena",
-          "stock": 9
+          "stock": 40
         },
         {
           "id": "var-007",
           "talla": "L",
           "color": "Arena",
-          "stock": 4
+          "stock": 45
         },
         {
           "id": "var-008",
           "talla": "XL",
           "color": "Arena",
-          "stock": 2
+          "stock": 50
         }
       ]
     },
@@ -83,8 +85,8 @@
       "nombre": "Blazer clásico urbano",
       "categoria": "mujer",
       "descripcion": "Silueta estructurada con un acabado cómodo. Diseñado para looks elegantes y cotidianos.",
-      "precioCentimos": 16990,
-      "imagen": "/imagenes/blazer-urbano.svg",
+      "precioCentimos": 20048,
+      "imagen": "/imagenes/blazer-urbano.jpg",
       "etiqueta": "Edición LINO",
       "activo": true,
       "variantes": [
@@ -92,19 +94,19 @@
           "id": "var-009",
           "talla": "S",
           "color": "Caramelo",
-          "stock": 4
+          "stock": 35
         },
         {
           "id": "var-010",
           "talla": "M",
           "color": "Caramelo",
-          "stock": 7
+          "stock": 40
         },
         {
           "id": "var-011",
           "talla": "L",
           "color": "Caramelo",
-          "stock": 0
+          "stock": 45
         }
       ]
     },
@@ -113,8 +115,8 @@
       "nombre": "Pantalón recto relaxed",
       "categoria": "hombre",
       "descripcion": "Pantalón de caída recta y cintura confortable para combinaciones fáciles.",
-      "precioCentimos": 9990,
-      "imagen": "/imagenes/pantalon-recto.svg",
+      "precioCentimos": 11788,
+      "imagen": "/imagenes/pantalon-recto.jpg",
       "etiqueta": "",
       "activo": true,
       "variantes": [
@@ -122,25 +124,25 @@
           "id": "var-012",
           "talla": "28",
           "color": "Oliva",
-          "stock": 4
+          "stock": 35
         },
         {
           "id": "var-013",
           "talla": "30",
           "color": "Oliva",
-          "stock": 7
+          "stock": 40
         },
         {
           "id": "var-014",
           "talla": "32",
           "color": "Oliva",
-          "stock": 3
+          "stock": 45
         },
         {
           "id": "var-015",
           "talla": "34",
           "color": "Oliva",
-          "stock": 0
+          "stock": 50
         }
       ]
     },
@@ -149,8 +151,8 @@
       "nombre": "Sudadera minimal",
       "categoria": "hombre",
       "descripcion": "Sudadera de algodón con cuello redondo, tacto agradable y fit holgado.",
-      "precioCentimos": 10990,
-      "imagen": "/imagenes/sudadera-minimal.svg",
+      "precioCentimos": 12968,
+      "imagen": "/imagenes/sudadera-minimal.jpg",
       "etiqueta": "Nuevo",
       "activo": true,
       "variantes": [
@@ -158,19 +160,19 @@
           "id": "var-016",
           "talla": "S",
           "color": "Grafito",
-          "stock": 2
+          "stock": 35
         },
         {
           "id": "var-017",
           "talla": "M",
           "color": "Grafito",
-          "stock": 10
+          "stock": 40
         },
         {
           "id": "var-018",
           "talla": "L",
           "color": "Grafito",
-          "stock": 8
+          "stock": 45
         }
       ]
     },
@@ -179,8 +181,8 @@
       "nombre": "Vestido midi de temporada",
       "categoria": "mujer",
       "descripcion": "Vestido midi de líneas simples que destaca por su caída ligera y silueta atemporal.",
-      "precioCentimos": 13990,
-      "imagen": "/imagenes/vestido-midi.svg",
+      "precioCentimos": 16508,
+      "imagen": "/imagenes/vestido-midi.jpg",
       "etiqueta": "Nueva colección",
       "activo": true,
       "variantes": [
@@ -188,19 +190,19 @@
           "id": "var-019",
           "talla": "S",
           "color": "Terracota",
-          "stock": 5
+          "stock": 35
         },
         {
           "id": "var-020",
           "talla": "M",
           "color": "Terracota",
-          "stock": 6
+          "stock": 40
         },
         {
           "id": "var-021",
           "talla": "L",
           "color": "Terracota",
-          "stock": 0
+          "stock": 45
         }
       ]
     },
@@ -209,8 +211,8 @@
       "nombre": "Bolso urbano de lona",
       "categoria": "accesorios",
       "descripcion": "Bolso tote amplio de inspiración urbana, ideal para el día a día.",
-      "precioCentimos": 4990,
-      "imagen": "/imagenes/bolso-lona.svg",
+      "precioCentimos": 5888,
+      "imagen": "/imagenes/bolso-lona.jpg",
       "etiqueta": "",
       "activo": true,
       "variantes": [
@@ -218,7 +220,7 @@
           "id": "var-022",
           "talla": "Única",
           "color": "Natural",
-          "stock": 15
+          "stock": 35
         }
       ]
     },
@@ -227,8 +229,8 @@
       "nombre": "Chaqueta ligera casual",
       "categoria": "mujer",
       "descripcion": "Chaqueta corta con acabado limpio y bolsillos funcionales.",
-      "precioCentimos": 15990,
-      "imagen": "/imagenes/chaqueta-casual.svg",
+      "precioCentimos": 18868,
+      "imagen": "/imagenes/chaqueta-casual.jpg",
       "etiqueta": "",
       "activo": true,
       "variantes": [
@@ -236,19 +238,19 @@
           "id": "var-023",
           "talla": "S",
           "color": "Piedra",
-          "stock": 4
+          "stock": 35
         },
         {
           "id": "var-024",
           "talla": "M",
           "color": "Piedra",
-          "stock": 6
+          "stock": 40
         },
         {
           "id": "var-025",
           "talla": "L",
           "color": "Piedra",
-          "stock": 2
+          "stock": 45
         }
       ]
     },
@@ -257,8 +259,8 @@
       "nombre": "Top canalé arena",
       "categoria": "mujer",
       "descripcion": "Top de tejido acanalado con diseño cómodo y un estilo casual para combinar con jeans o faldas.",
-      "precioCentimos": 4590,
-      "imagen": "/imagenes/top-canale.svg",
+      "precioCentimos": 5416,
+      "imagen": "/imagenes/top-canale.jpg",
       "etiqueta": "Novedad",
       "activo": true,
       "variantes": [
@@ -266,19 +268,19 @@
           "id": "var-090",
           "talla": "S",
           "color": "Arena",
-          "stock": 5
+          "stock": 35
         },
         {
           "id": "var-091",
           "talla": "M",
           "color": "Arena",
-          "stock": 7
+          "stock": 40
         },
         {
           "id": "var-092",
           "talla": "L",
           "color": "Arena",
-          "stock": 9
+          "stock": 45
         }
       ]
     },
@@ -287,8 +289,8 @@
       "nombre": "Falda plisada midi",
       "categoria": "mujer",
       "descripcion": "Falda midi con pliegues suaves y cintura cómoda para un estilo fresco y femenino.",
-      "precioCentimos": 8990,
-      "imagen": "/imagenes/falda-plisada.svg",
+      "precioCentimos": 10608,
+      "imagen": "/imagenes/falda-plisada.jpg",
       "etiqueta": "Nueva colección",
       "activo": true,
       "variantes": [
@@ -296,19 +298,19 @@
           "id": "var-100",
           "talla": "S",
           "color": "Rosa empolvado",
-          "stock": 6
+          "stock": 35
         },
         {
           "id": "var-101",
           "talla": "M",
           "color": "Rosa empolvado",
-          "stock": 8
+          "stock": 40
         },
         {
           "id": "var-102",
           "talla": "L",
           "color": "Rosa empolvado",
-          "stock": 10
+          "stock": 45
         }
       ]
     },
@@ -317,8 +319,8 @@
       "nombre": "Blusa de satén",
       "categoria": "mujer",
       "descripcion": "Blusa satinada de corte fluido y cuello delicado. Perfecta para looks de ocasión.",
-      "precioCentimos": 10990,
-      "imagen": "/imagenes/blusa-saten.svg",
+      "precioCentimos": 12968,
+      "imagen": "/imagenes/blusa-saten.jpg",
       "etiqueta": "Elegante",
       "activo": true,
       "variantes": [
@@ -326,19 +328,19 @@
           "id": "var-110",
           "talla": "S",
           "color": "Champán",
-          "stock": 7
+          "stock": 35
         },
         {
           "id": "var-111",
           "talla": "M",
           "color": "Champán",
-          "stock": 9
+          "stock": 40
         },
         {
           "id": "var-112",
           "talla": "L",
           "color": "Champán",
-          "stock": 11
+          "stock": 45
         }
       ]
     },
@@ -347,8 +349,8 @@
       "nombre": "Jeans de tiro alto",
       "categoria": "mujer",
       "descripcion": "Denim resistente y cómodo, con tiro alto y corte recto para acompañarte cada día.",
-      "precioCentimos": 11990,
-      "imagen": "/imagenes/jeans-alto.svg",
+      "precioCentimos": 14148,
+      "imagen": "/imagenes/jeans-alto.jpg",
       "etiqueta": "Más vendido",
       "activo": true,
       "variantes": [
@@ -356,25 +358,25 @@
           "id": "var-120",
           "talla": "26",
           "color": "Azul denim",
-          "stock": 4
+          "stock": 35
         },
         {
           "id": "var-121",
           "talla": "28",
           "color": "Azul denim",
-          "stock": 6
+          "stock": 40
         },
         {
           "id": "var-122",
           "talla": "30",
           "color": "Azul denim",
-          "stock": 8
+          "stock": 45
         },
         {
           "id": "var-123",
           "talla": "32",
           "color": "Azul denim",
-          "stock": 10
+          "stock": 50
         }
       ]
     },
@@ -383,8 +385,8 @@
       "nombre": "Cárdigan tejido suave",
       "categoria": "mujer",
       "descripcion": "Cárdigan con botones frontales, textura cálida y silueta relajada.",
-      "precioCentimos": 12990,
-      "imagen": "/imagenes/cardigan-tejido.svg",
+      "precioCentimos": 15328,
+      "imagen": "/imagenes/cardigan-tejido.jpg",
       "etiqueta": "Nuevo",
       "activo": true,
       "variantes": [
@@ -392,19 +394,19 @@
           "id": "var-130",
           "talla": "S",
           "color": "Beige",
-          "stock": 5
+          "stock": 35
         },
         {
           "id": "var-131",
           "talla": "M",
           "color": "Beige",
-          "stock": 7
+          "stock": 40
         },
         {
           "id": "var-132",
           "talla": "L",
           "color": "Beige",
-          "stock": 9
+          "stock": 45
         }
       ]
     },
@@ -413,8 +415,8 @@
       "nombre": "Pantalón wide leg",
       "categoria": "mujer",
       "descripcion": "Pantalón de pierna ancha y tiro alto para un look moderno y ligero.",
-      "precioCentimos": 11990,
-      "imagen": "/imagenes/pantalon-wide.svg",
+      "precioCentimos": 14148,
+      "imagen": "/imagenes/pantalon-wide.jpg",
       "etiqueta": "",
       "activo": true,
       "variantes": [
@@ -422,25 +424,25 @@
           "id": "var-140",
           "talla": "26",
           "color": "Salvia",
-          "stock": 6
+          "stock": 35
         },
         {
           "id": "var-141",
           "talla": "28",
           "color": "Salvia",
-          "stock": 8
+          "stock": 40
         },
         {
           "id": "var-142",
           "talla": "30",
           "color": "Salvia",
-          "stock": 10
+          "stock": 45
         },
         {
           "id": "var-143",
           "talla": "32",
           "color": "Salvia",
-          "stock": 12
+          "stock": 50
         }
       ]
     },
@@ -449,8 +451,8 @@
       "nombre": "Polo oversize urbano",
       "categoria": "hombre",
       "descripcion": "Polo de algodón grueso con corte oversize y cuello redondo.",
-      "precioCentimos": 6990,
-      "imagen": "/imagenes/polo-oversize.svg",
+      "precioCentimos": 8248,
+      "imagen": "/imagenes/polo-oversize.jpg",
       "etiqueta": "Tendencia",
       "activo": true,
       "variantes": [
@@ -458,25 +460,25 @@
           "id": "var-150",
           "talla": "S",
           "color": "Verde humo",
-          "stock": 7
+          "stock": 35
         },
         {
           "id": "var-151",
           "talla": "M",
           "color": "Verde humo",
-          "stock": 9
+          "stock": 40
         },
         {
           "id": "var-152",
           "talla": "L",
           "color": "Verde humo",
-          "stock": 11
+          "stock": 45
         },
         {
           "id": "var-153",
           "talla": "XL",
           "color": "Verde humo",
-          "stock": 13
+          "stock": 50
         }
       ]
     },
@@ -485,8 +487,8 @@
       "nombre": "Bermuda casual",
       "categoria": "hombre",
       "descripcion": "Bermuda de algodón con bolsillos y ajuste cómodo para días cálidos.",
-      "precioCentimos": 7990,
-      "imagen": "/imagenes/bermuda-casual.svg",
+      "precioCentimos": 9428,
+      "imagen": "/imagenes/bermuda-casual.jpg",
       "etiqueta": "",
       "activo": true,
       "variantes": [
@@ -494,25 +496,25 @@
           "id": "var-160",
           "talla": "28",
           "color": "Caqui",
-          "stock": 4
+          "stock": 35
         },
         {
           "id": "var-161",
           "talla": "30",
           "color": "Caqui",
-          "stock": 6
+          "stock": 40
         },
         {
           "id": "var-162",
           "talla": "32",
           "color": "Caqui",
-          "stock": 8
+          "stock": 45
         },
         {
           "id": "var-163",
           "talla": "34",
           "color": "Caqui",
-          "stock": 10
+          "stock": 50
         }
       ]
     },
@@ -521,8 +523,8 @@
       "nombre": "Sobrecamisa de cuadros",
       "categoria": "hombre",
       "descripcion": "Sobrecamisa de franela ligera con botones, ideal para vestir en capas.",
-      "precioCentimos": 13990,
-      "imagen": "/imagenes/sobrecamisa-cuadros.svg",
+      "precioCentimos": 16508,
+      "imagen": "/imagenes/sobrecamisa-cuadros.jpg",
       "etiqueta": "Nueva colección",
       "activo": true,
       "variantes": [
@@ -530,25 +532,25 @@
           "id": "var-170",
           "talla": "S",
           "color": "Café",
-          "stock": 5
+          "stock": 35
         },
         {
           "id": "var-171",
           "talla": "M",
           "color": "Café",
-          "stock": 7
+          "stock": 40
         },
         {
           "id": "var-172",
           "talla": "L",
           "color": "Café",
-          "stock": 9
+          "stock": 45
         },
         {
           "id": "var-173",
           "talla": "XL",
           "color": "Café",
-          "stock": 11
+          "stock": 50
         }
       ]
     },
@@ -557,8 +559,8 @@
       "nombre": "Chompa de cuello alto",
       "categoria": "hombre",
       "descripcion": "Prenda de punto cálido, con cuello alto y ajuste confortable.",
-      "precioCentimos": 14990,
-      "imagen": "/imagenes/chompa-cuello.svg",
+      "precioCentimos": 17688,
+      "imagen": "/imagenes/chompa-cuello.jpg",
       "etiqueta": "Edición LINO",
       "activo": true,
       "variantes": [
@@ -566,25 +568,25 @@
           "id": "var-180",
           "talla": "S",
           "color": "Gris azulado",
-          "stock": 6
+          "stock": 35
         },
         {
           "id": "var-181",
           "talla": "M",
           "color": "Gris azulado",
-          "stock": 8
+          "stock": 40
         },
         {
           "id": "var-182",
           "talla": "L",
           "color": "Gris azulado",
-          "stock": 10
+          "stock": 45
         },
         {
           "id": "var-183",
           "talla": "XL",
           "color": "Gris azulado",
-          "stock": 12
+          "stock": 50
         }
       ]
     },
@@ -593,8 +595,8 @@
       "nombre": "Jogger premium",
       "categoria": "hombre",
       "descripcion": "Pantalón deportivo de corte moderno, cintura elástica y bolsillos laterales.",
-      "precioCentimos": 9990,
-      "imagen": "/imagenes/jogger-premium.svg",
+      "precioCentimos": 11788,
+      "imagen": "/imagenes/jogger-premium.jpg",
       "etiqueta": "",
       "activo": true,
       "variantes": [
@@ -602,25 +604,25 @@
           "id": "var-190",
           "talla": "S",
           "color": "Grafito",
-          "stock": 7
+          "stock": 35
         },
         {
           "id": "var-191",
           "talla": "M",
           "color": "Grafito",
-          "stock": 9
+          "stock": 40
         },
         {
           "id": "var-192",
           "talla": "L",
           "color": "Grafito",
-          "stock": 11
+          "stock": 45
         },
         {
           "id": "var-193",
           "talla": "XL",
           "color": "Grafito",
-          "stock": 13
+          "stock": 50
         }
       ]
     },
@@ -629,8 +631,8 @@
       "nombre": "Gorra de algodón",
       "categoria": "accesorios",
       "descripcion": "Gorra de seis paneles con visera curva y regulador posterior.",
-      "precioCentimos": 3990,
-      "imagen": "/imagenes/gorra-algodon.svg",
+      "precioCentimos": 4708,
+      "imagen": "/imagenes/gorra-algodon.jpg",
       "etiqueta": "Nuevo",
       "activo": true,
       "variantes": [
@@ -638,7 +640,7 @@
           "id": "var-200",
           "talla": "Única",
           "color": "Arena",
-          "stock": 4
+          "stock": 35
         }
       ]
     },
@@ -647,8 +649,8 @@
       "nombre": "Mochila urbana compacta",
       "categoria": "accesorios",
       "descripcion": "Mochila práctica con bolsillo frontal y espacio para tus esenciales.",
-      "precioCentimos": 10990,
-      "imagen": "/imagenes/mochila-urbana.svg",
+      "precioCentimos": 12968,
+      "imagen": "/imagenes/mochila-urbana.jpg",
       "etiqueta": "Más vendido",
       "activo": true,
       "variantes": [
@@ -656,7 +658,7 @@
           "id": "var-210",
           "talla": "Única",
           "color": "Olivo",
-          "stock": 5
+          "stock": 35
         }
       ]
     },
@@ -665,8 +667,8 @@
       "nombre": "Cinturón trenzado",
       "categoria": "accesorios",
       "descripcion": "Cinturón de acabado trenzado con hebilla metálica de diseño discreto.",
-      "precioCentimos": 3490,
-      "imagen": "/imagenes/cinturon-trenzado.svg",
+      "precioCentimos": 4118,
+      "imagen": "/imagenes/cinturon-trenzado.jpg",
       "etiqueta": "",
       "activo": true,
       "variantes": [
@@ -674,7 +676,7 @@
           "id": "var-220",
           "talla": "Única",
           "color": "Chocolate",
-          "stock": 6
+          "stock": 35
         }
       ]
     },
@@ -683,8 +685,8 @@
       "nombre": "Pañuelo estampado",
       "categoria": "accesorios",
       "descripcion": "Pañuelo suave con patrón geométrico para dar un toque especial a tu look.",
-      "precioCentimos": 2990,
-      "imagen": "/imagenes/panuelo-estampado.svg",
+      "precioCentimos": 3528,
+      "imagen": "/imagenes/panuelo-estampado.jpg",
       "etiqueta": "Nuevo",
       "activo": true,
       "variantes": [
@@ -692,7 +694,7 @@
           "id": "var-230",
           "talla": "Única",
           "color": "Coral",
-          "stock": 7
+          "stock": 35
         }
       ]
     },
@@ -701,8 +703,8 @@
       "nombre": "Gafas rectangulares",
       "categoria": "accesorios",
       "descripcion": "Gafas de montura ligera con diseño rectangular para complementar tus outfits.",
-      "precioCentimos": 5990,
-      "imagen": "/imagenes/gafas-rectangulares.svg",
+      "precioCentimos": 7068,
+      "imagen": "/imagenes/gafas-rectangulares.jpg",
       "etiqueta": "",
       "activo": true,
       "variantes": [
@@ -710,10 +712,417 @@
           "id": "var-240",
           "talla": "Única",
           "color": "Negro",
-          "stock": 4
+          "stock": 35
+        }
+      ]
+    },
+    {
+      "id": "prod-zap-001",
+      "nombre": "Zapatillas urbanas blancas",
+      "categoria": "zapatillas",
+      "descripcion": "Zapatillas urbanas de acabado blanco, cómodas y versátiles para el día a día.",
+      "precioCentimos": 10608,
+      "imagen": "/imagenes/zapatilla-1.jpg",
+      "etiqueta": "Nuevo",
+      "activo": true,
+      "variantes": [
+        {
+          "id": "var-zap-1-36",
+          "talla": "36",
+          "color": "Blanco",
+          "stock": 35
+        },
+        {
+          "id": "var-zap-1-37",
+          "talla": "37",
+          "color": "Blanco",
+          "stock": 40
+        },
+        {
+          "id": "var-zap-1-38",
+          "talla": "38",
+          "color": "Blanco",
+          "stock": 45
+        },
+        {
+          "id": "var-zap-1-39",
+          "talla": "39",
+          "color": "Blanco",
+          "stock": 50
+        },
+        {
+          "id": "var-zap-1-40",
+          "talla": "40",
+          "color": "Blanco",
+          "stock": 35
+        },
+        {
+          "id": "var-zap-1-41",
+          "talla": "41",
+          "color": "Blanco",
+          "stock": 40
+        },
+        {
+          "id": "var-zap-1-42",
+          "talla": "42",
+          "color": "Blanco",
+          "stock": 45
+        }
+      ]
+    },
+    {
+      "id": "prod-zap-002",
+      "nombre": "Zapatillas deportivas negras",
+      "categoria": "zapatillas",
+      "descripcion": "Modelo deportivo de malla transpirable con suela ligera para caminar y entrenar.",
+      "precioCentimos": 14148,
+      "imagen": "/imagenes/zapatilla-2.jpg",
+      "etiqueta": "Deportivo",
+      "activo": true,
+      "variantes": [
+        {
+          "id": "var-zap-2-36",
+          "talla": "36",
+          "color": "Negro",
+          "stock": 35
+        },
+        {
+          "id": "var-zap-2-37",
+          "talla": "37",
+          "color": "Negro",
+          "stock": 40
+        },
+        {
+          "id": "var-zap-2-38",
+          "talla": "38",
+          "color": "Negro",
+          "stock": 45
+        },
+        {
+          "id": "var-zap-2-39",
+          "talla": "39",
+          "color": "Negro",
+          "stock": 50
+        },
+        {
+          "id": "var-zap-2-40",
+          "talla": "40",
+          "color": "Negro",
+          "stock": 35
+        },
+        {
+          "id": "var-zap-2-41",
+          "talla": "41",
+          "color": "Negro",
+          "stock": 40
+        },
+        {
+          "id": "var-zap-2-42",
+          "talla": "42",
+          "color": "Negro",
+          "stock": 45
+        }
+      ]
+    },
+    {
+      "id": "prod-zap-003",
+      "nombre": "Zapatillas retro beige",
+      "categoria": "zapatillas",
+      "descripcion": "Diseño retro en tonos beige y crema, ideal para looks casuales.",
+      "precioCentimos": 12968,
+      "imagen": "/imagenes/zapatilla-3.jpg",
+      "etiqueta": "Tendencia",
+      "activo": true,
+      "variantes": [
+        {
+          "id": "var-zap-3-36",
+          "talla": "36",
+          "color": "Beige",
+          "stock": 35
+        },
+        {
+          "id": "var-zap-3-37",
+          "talla": "37",
+          "color": "Beige",
+          "stock": 40
+        },
+        {
+          "id": "var-zap-3-38",
+          "talla": "38",
+          "color": "Beige",
+          "stock": 45
+        },
+        {
+          "id": "var-zap-3-39",
+          "talla": "39",
+          "color": "Beige",
+          "stock": 50
+        },
+        {
+          "id": "var-zap-3-40",
+          "talla": "40",
+          "color": "Beige",
+          "stock": 35
+        },
+        {
+          "id": "var-zap-3-41",
+          "talla": "41",
+          "color": "Beige",
+          "stock": 40
+        },
+        {
+          "id": "var-zap-3-42",
+          "talla": "42",
+          "color": "Beige",
+          "stock": 45
+        }
+      ]
+    },
+    {
+      "id": "prod-zap-004",
+      "nombre": "Zapatillas casual rosa",
+      "categoria": "zapatillas",
+      "descripcion": "Zapatillas casuales en rosa pastel y blanco, con acabado urbano.",
+      "precioCentimos": 11788,
+      "imagen": "/imagenes/zapatilla-4.jpg",
+      "etiqueta": "Nuevo",
+      "activo": true,
+      "variantes": [
+        {
+          "id": "var-zap-4-36",
+          "talla": "36",
+          "color": "Rosa",
+          "stock": 35
+        },
+        {
+          "id": "var-zap-4-37",
+          "talla": "37",
+          "color": "Rosa",
+          "stock": 40
+        },
+        {
+          "id": "var-zap-4-38",
+          "talla": "38",
+          "color": "Rosa",
+          "stock": 45
+        },
+        {
+          "id": "var-zap-4-39",
+          "talla": "39",
+          "color": "Rosa",
+          "stock": 50
+        },
+        {
+          "id": "var-zap-4-40",
+          "talla": "40",
+          "color": "Rosa",
+          "stock": 35
+        },
+        {
+          "id": "var-zap-4-41",
+          "talla": "41",
+          "color": "Rosa",
+          "stock": 40
+        },
+        {
+          "id": "var-zap-4-42",
+          "talla": "42",
+          "color": "Rosa",
+          "stock": 45
         }
       ]
     }
   ],
-  "pedidos": []
+  "pedidos": [],
+  "cupones": [
+    {
+      "id": "seed-bienvenida10",
+      "codigo": "BIENVENIDA10",
+      "tipo": "porcentaje",
+      "valor": 10,
+      "minimoCentimos": 0,
+      "maxUsos": null,
+      "usos": 0,
+      "fechaInicio": null,
+      "fechaFin": null,
+      "activo": true,
+      "descripcion": "10% de bienvenida para nuevos usuarios",
+      "soloNuevoUsuario": true,
+      "unUsoPorUsuario": true,
+      "usuariosUsados": []
+    },
+    {
+      "id": "seed-lino15",
+      "codigo": "LINO15",
+      "tipo": "porcentaje",
+      "valor": 15,
+      "minimoCentimos": 0,
+      "maxUsos": null,
+      "usos": 0,
+      "fechaInicio": null,
+      "fechaFin": null,
+      "activo": true,
+      "descripcion": "15% en tu compra",
+      "soloNuevoUsuario": false,
+      "unUsoPorUsuario": false,
+      "usuariosUsados": []
+    },
+    {
+      "id": "seed-enviogratis",
+      "codigo": "ENVIOGRATIS",
+      "tipo": "fijo",
+      "valor": 1200,
+      "minimoCentimos": 0,
+      "maxUsos": null,
+      "usos": 0,
+      "fechaInicio": null,
+      "fechaFin": null,
+      "activo": true,
+      "descripcion": "Descuento equivalente a S/ 12",
+      "soloNuevoUsuario": false,
+      "unUsoPorUsuario": false,
+      "usuariosUsados": []
+    },
+    {
+      "id": "seed-ropa10",
+      "codigo": "ROPA10",
+      "tipo": "porcentaje",
+      "valor": 10,
+      "minimoCentimos": 0,
+      "maxUsos": null,
+      "usos": 0,
+      "fechaInicio": null,
+      "fechaFin": null,
+      "activo": true,
+      "descripcion": "10% en prendas",
+      "soloNuevoUsuario": false,
+      "unUsoPorUsuario": false,
+      "usuariosUsados": []
+    },
+    {
+      "id": "seed-accesorios12",
+      "codigo": "ACCESORIOS12",
+      "tipo": "porcentaje",
+      "valor": 12,
+      "minimoCentimos": 0,
+      "maxUsos": null,
+      "usos": 0,
+      "fechaInicio": null,
+      "fechaFin": null,
+      "activo": true,
+      "descripcion": "12% en accesorios",
+      "soloNuevoUsuario": false,
+      "unUsoPorUsuario": false,
+      "usuariosUsados": []
+    },
+    {
+      "id": "seed-zapatillas15",
+      "codigo": "ZAPATILLAS15",
+      "tipo": "porcentaje",
+      "valor": 15,
+      "minimoCentimos": 0,
+      "maxUsos": null,
+      "usos": 0,
+      "fechaInicio": null,
+      "fechaFin": null,
+      "activo": true,
+      "descripcion": "15% en zapatillas",
+      "soloNuevoUsuario": false,
+      "unUsoPorUsuario": false,
+      "usuariosUsados": []
+    },
+    {
+      "id": "seed-black20",
+      "codigo": "BLACK20",
+      "tipo": "porcentaje",
+      "valor": 20,
+      "minimoCentimos": 0,
+      "maxUsos": null,
+      "usos": 0,
+      "fechaInicio": null,
+      "fechaFin": null,
+      "activo": true,
+      "descripcion": "20% promoción especial",
+      "soloNuevoUsuario": false,
+      "unUsoPorUsuario": false,
+      "usuariosUsados": []
+    },
+    {
+      "id": "seed-nuevousuario",
+      "codigo": "NUEVOUSUARIO",
+      "tipo": "porcentaje",
+      "valor": 5,
+      "minimoCentimos": 0,
+      "maxUsos": null,
+      "usos": 0,
+      "fechaInicio": null,
+      "fechaFin": null,
+      "activo": true,
+      "descripcion": "5% para tu primera compra",
+      "soloNuevoUsuario": false,
+      "unUsoPorUsuario": false,
+      "usuariosUsados": []
+    },
+    {
+      "id": "seed-fashion5",
+      "codigo": "FASHION5",
+      "tipo": "porcentaje",
+      "valor": 5,
+      "minimoCentimos": 0,
+      "maxUsos": null,
+      "usos": 0,
+      "fechaInicio": null,
+      "fechaFin": null,
+      "activo": true,
+      "descripcion": "5% en colección",
+      "soloNuevoUsuario": false,
+      "unUsoPorUsuario": false,
+      "usuariosUsados": []
+    },
+    {
+      "id": "seed-cyber25",
+      "codigo": "CYBER25",
+      "tipo": "porcentaje",
+      "valor": 25,
+      "minimoCentimos": 0,
+      "maxUsos": null,
+      "usos": 0,
+      "fechaInicio": null,
+      "fechaFin": null,
+      "activo": true,
+      "descripcion": "25% campaña especial",
+      "soloNuevoUsuario": false,
+      "unUsoPorUsuario": false,
+      "usuariosUsados": []
+    }
+  ],
+  "ofertas": [
+    {
+      "id": "oferta-black-friday",
+      "titulo": "BLACK FRIDAY",
+      "subtitulo": "Hasta 40% de descuento",
+      "imagen": "/imagenes/editorial-hero.svg",
+      "enlace": "/catalogo",
+      "activa": true,
+      "orden": 1
+    },
+    {
+      "id": "oferta-zapatillas",
+      "titulo": "NUEVA COLECCIÓN",
+      "subtitulo": "Zapatillas para todos los días",
+      "imagen": "/imagenes/zapatilla-1.jpg",
+      "enlace": "/catalogo?buscar=zapatillas",
+      "activa": true,
+      "orden": 2
+    },
+    {
+      "id": "oferta-accesorios",
+      "titulo": "COMPLEMENTA TU ESTILO",
+      "subtitulo": "Accesorios seleccionados",
+      "imagen": "/imagenes/bolso-lona.jpg",
+      "enlace": "/catalogo?categoria=accesorios",
+      "activa": true,
+      "orden": 3
+    }
+  ]
 }

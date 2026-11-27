@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ingresarUsuario, registrarUsuario } from '../services/authApi.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import '../styles/login.css';
@@ -29,6 +29,7 @@ export default function Login() {
     const [enviando, setEnviando] = useState(false);
     const temporizador = useRef(null);
     const navegar = useNavigate();
+    const location = useLocation();
     const { iniciarSesion } = useAuth();
     const creando = modo === 'crear';
 
@@ -59,7 +60,8 @@ export default function Login() {
                 const { usuario } = await ingresarUsuario(correo.trim(), contrasena);
                 iniciarSesion(usuario);
                 setResultado({ tipo: 'ok', texto: `Inicio de sesión correcto. Bienvenido, ${usuario.nombre}. Te llevamos al inicio...` });
-                temporizador.current = setTimeout(() => navegar('/'), 1800);
+                const destino = location.state?.from || (usuario.rol === 'admin' ? '/admin' : '/');
+                temporizador.current = setTimeout(() => navegar(destino, { replace: true }), 900);
             }
         } catch (error) {
             setResultado({ tipo: 'error', texto: error.message });
@@ -73,7 +75,7 @@ export default function Login() {
     return <div className="container login-page">
         <p className="overline">{creando ? 'CREAR CUENTA' : 'BIENVENIDO DE VUELTA'}</p>
         <h1>{creando ? <>Crea tu<br /><em>cuenta.</em></> : <>Inicia<br /><em>sesión.</em></>}</h1>
-        <p className="login-lead">Tu correo y contraseña se verifican en el servidor contra el archivo local bd.json, donde las contraseñas se guardan cifradas.</p>
+        <p className="login-lead">Accede a tu cuenta para continuar con tus compras y consultar tus pedidos.</p>
 
         <form className="login-form" onSubmit={enviar} noValidate>
             {creando && <div className="login-field">

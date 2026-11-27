@@ -12,10 +12,12 @@
 | LINO-6 Controlar totales en céntimos | `services/formato.js` y servicio de pedidos | Base funcional incluida |
 | LINO-7 PR y conflictos de Git | Repositorio del equipo | Pendiente de ejecución real |
 | LINO-8 JSON local y respaldos | `repositories/jsonStore.js` | Base funcional incluida |
-| LINO-12 Sesiones de administrador | Pendiente | No implementado |
-| LINO-13 Panel de administración | Pendiente | No implementado |
+| LINO-12 Roles y protección de administración | `usuarioService.js`, `middleware/auth.js`, `routes/admin.js` | Implementado; requiere configurar la cuenta administradora en el entorno |
+| LINO-13 Panel de administración | `frontend/src/pages/Admin.jsx`, `adminService.js` | Implementado: resumen, productos, pedidos, usuarios y cupones |
 | LINO-14 Ampliar matriz de pruebas | `tests` | Pruebas iniciales incluidas |
-| LINO-15 Manual de despliegue y evidencias | `README.md`, `docs` | Documentación inicial incluida |
+| LINO-15 Manual de despliegue y evidencias | `README.md`, `docs` | Documentación actualizada incluida |
+| LINO-16 Navegación pública e historial de compras | `App.jsx`, `MisPedidos.jsx`, API de pedidos | Implementado; login requerido al confirmar compra |
+| LINO-17 Cupones y centro de ayuda | `adminService.js`, `CentroAyuda.jsx`, `ChatAyuda.jsx` | Implementado con validación en backend y asistente guiado |
 
 ## Ejemplo de historia de usuario
 
@@ -41,7 +43,7 @@ Registrar los commits, PR, revisiones y conflictos reales en GitHub y Jira despu
 
 ## Ampliación propuesta para Jira: catálogo y checkout
 
-- **KAN-CAT:** ampliar catálogo de 8 a 24 productos (tres categorías, tallas y stock) e incorporar ilustraciones locales.
+- **KAN-CAT:** ampliar catálogo de 8 a 28 productos (incluye zapatillas) (tres categorías, tallas y stock) e incorporar ilustraciones locales.
 - **KAN-PAGO:** implementar selección de Yape, Plin, tarjeta o efectivo **simulados** antes de confirmar el pedido; impedir registro sin selección.
 - **KAN-API:** validar métodos en API, almacenar `metodoPago` y `estadoPago` en JSON, rechazar métodos inválidos y reintentos con método diferente.
 - **KAN-DATOS:** inicialización idempotente que agrega nuevos productos a tiendas existentes conservando pedidos y stock, con respaldo automático.

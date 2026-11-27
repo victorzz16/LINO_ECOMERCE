@@ -2,7 +2,10 @@ import express from 'express';
 import productos from './routes/productos.js';
 import pedidos from './routes/pedidos.js';
 import usuarios from './routes/usuarios.js';
+import admin from './routes/admin.js';
+import cupones from './routes/cupones.js';
 import { errorHandler } from './middleware/errorHandler.js';
+import { listarOfertasPublicas } from './services/adminService.js';
 import { usaPostgres, verificarConexionPostgres } from './db/postgres.js';
 
 export function crearApp() {
@@ -22,7 +25,7 @@ export function crearApp() {
       response.setHeader('Access-Control-Allow-Origin', origen);
       response.setHeader('Access-Control-Allow-Credentials', 'true');
       response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-      response.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+      response.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
       response.setHeader('Vary', 'Origin');
     }
     if (request.method === 'OPTIONS') {
@@ -47,9 +50,12 @@ export function crearApp() {
     }
   });
 
+  app.get('/api/ofertas', async (_req, res, next) => { try { const ofertas = await listarOfertasPublicas(); res.set('Cache-Control', 'no-store'); res.json({ ofertas: ofertas.filter(o => o.activa).sort((a,b) => a.orden-b.orden) }); } catch (e) { next(e); } });
   app.use('/api/productos', productos);
   app.use('/api/pedidos', pedidos);
   app.use('/api/usuarios', usuarios);
+  app.use('/api/admin', admin);
+  app.use('/api/cupones', cupones);
   app.use('/api', (_req, res) => res.status(404).json({ error: 'Ruta de la API inexistente.' }));
   app.use(errorHandler);
   return app;
